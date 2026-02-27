@@ -1,11 +1,11 @@
-from fastapi import FastAPI
+from app.core.config import settings
 from app.api.v1.api import api_router
 from app.db.database import init_db
 
 app = FastAPI(
-    title="E-commerce Inventory and Dynamic Pricing API",
+    title=settings.PROJECT_NAME,
     description="A sophisticated backend service for real-time inventory tracking and dynamic pricing.",
-    version="1.0.0",
+    version=settings.VERSION,
 )
 
 @app.on_event("startup")
