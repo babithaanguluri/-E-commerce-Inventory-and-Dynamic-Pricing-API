@@ -69,4 +69,4 @@ docker-compose exec api pytest
 - [x] Phase 2: Dynamic Pricing Rules
 - [x] Phase 3: Orders & Analytics
 - [x] Phase 4: Search & Promotions
-- [ ] Phase 5: Authentication & Authorization (In-Progress)
+- [ ] Phase 5: Authentication & Authorization (Complete)
