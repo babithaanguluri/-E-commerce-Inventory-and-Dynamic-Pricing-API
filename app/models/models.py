@@ -78,6 +78,7 @@ class PricingRuleType(str, enum.Enum):
     BULK = "BULK"
     USER_TIER = "USER_TIER"
     SEASONAL = "SEASONAL"
+    BOGO = "BOGO"
 
 class PricingRule(Base):
     __tablename__ = "pricing_rules"
