@@ -1,0 +1,15 @@
+from app.core.config import settings
+from app.models.models import Base
+
+engine = create_engine(settings.sqlalchemy_database_url)
+SessionLocal = sessionmaker(autocommit=False, autoflush=False, bind=engine)
+
+def get_db():
+    db = SessionLocal()
+    try:
+        yield db
+    finally:
+        db.close()
+
+def init_db():
+    Base.metadata.create_all(bind=engine)
