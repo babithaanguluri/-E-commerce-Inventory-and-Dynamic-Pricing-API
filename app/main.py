@@ -12,6 +12,17 @@ app = FastAPI(
 def startup_event():
     init_db()
 
+@app.exception_handler(APIException)
+async def api_exception_handler(request: Request, exc: APIException):
+    return JSONResponse(
+        status_code=exc.status_code,
+        content={
+            "detail": exc.detail,
+            "error_code": exc.error_code,
+            "path": request.url.path
+        },
+    )
+
 app.include_router(api_router, prefix="/api/v1")
 
 @app.get("/")
