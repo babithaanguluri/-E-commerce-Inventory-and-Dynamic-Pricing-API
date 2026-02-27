@@ -1,6 +1,9 @@
-from app.core.config import settings
+from fastapi import FastAPI, Request
+from fastapi.responses import JSONResponse
 from app.api.v1.api import api_router
 from app.db.database import init_db
+from app.core.config import settings
+from app.core.exceptions import APIException
 
 app = FastAPI(
     title=settings.PROJECT_NAME,
