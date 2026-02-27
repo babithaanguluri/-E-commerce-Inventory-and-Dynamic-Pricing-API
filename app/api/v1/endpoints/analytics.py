@@ -4,7 +4,7 @@ from typing import List
 from app.db.database import get_db
 from app.schemas import schemas
 from sqlalchemy import func
-from app.models.models import ProductVariant, OrderItem
+from app.models.models import ProductVariant, OrderItem, Product, Category
 
 router = APIRouter()
 
@@ -36,4 +36,26 @@ def get_top_selling_products(limit: int = Query(10, ge=1), db: Session = Depends
     return [
         {"sku": item.sku, "name": item.sku_name, "total_sold": item.total_sold}
         for item in top_selling
+    ]
+
+@router.get("/revenue-by-category")
+def get_revenue_by_category(db: Session = Depends(get_db)):
+    """
+    Returns total revenue generated per category.
+    """
+    revenue = (
+        db.query(
+            Category.name,
+            func.sum(OrderItem.quantity * OrderItem.unit_price).label("total_revenue")
+        )
+        .join(Product, Category.id == Product.category_id)
+        .join(ProductVariant, Product.id == ProductVariant.product_id)
+        .join(OrderItem, ProductVariant.id == OrderItem.variant_id)
+        .group_by(Category.id)
+        .order_by(func.sum(OrderItem.quantity * OrderItem.unit_price).desc())
+        .all()
+    )
+    return [
+        {"category": item.name, "total_revenue": round(item.total_revenue, 2)}
+        for item in revenue
     ]
