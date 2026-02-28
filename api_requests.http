@@ -1,0 +1,148 @@
+### --- AUTHENTICATION ---
+
+### 1. Register a User
+POST {{baseUrl}}/auth/register
+Content-Type: application/json
+
+{
+    "email": "admin@example.com",
+    "password": "strongpassword123",
+    "full_name": "Admin User",
+    "role": "ADMIN"
+}
+
+### 2. Login (Get Token)
+# @name login
+POST {{baseUrl}}/auth/login
+Content-Type: application/x-www-form-urlencoded
+
+username=admin@example.com&password=strongpassword123
+
+### 3. Get Current User (Requires Bearer Token)
+@token = {{login.response.body.access_token}}
+GET {{baseUrl}}/auth/me
+Authorization: Bearer {{token}}
+
+
+### --- PRODUCTS & CATEGORIES ---
+
+### 4. Create a Category (Admin Required)
+# @name createCategory
+POST {{baseUrl}}/categories/
+Content-Type: application/json
+Authorization: Bearer {{token}}
+
+{
+    "name": "Electronics"
+}
+
+### 5. Create a Product
+# @name createProduct
+POST {{baseUrl}}/products/
+Content-Type: application/json
+
+{
+    "name": "Smartphone",
+    "description": "Latest flagship smartphone",
+    "base_price": 800.0,
+    "category_id": 1,
+    "status": "ACTIVE"
+}
+
+### 6. Add a Product Variant
+# @name createVariant
+POST {{baseUrl}}/products/1/variants
+Content-Type: application/json
+
+{
+    "sku": "PHN-PRO-BLK",
+    "sku_name": "Pro Canvas Black",
+    "price_adjustment": 200.0,
+    "stock_quantity": 50
+}
+
+### 7. Calculate Dynamic Price
+GET {{baseUrl}}/products/1/price?quantity=2
+
+
+### --- PRICING RULES ---
+
+### 8. Create BOGO (Buy One Get One) Rule
+POST {{baseUrl}}/rules/
+Content-Type: application/json
+
+{
+    "name": "Summer BOGO",
+    "type": "BOGO",
+    "priority": 1,
+    "parameters": {},
+    "is_active": true
+}
+
+### 9. Create Bulk Discount Rule
+POST {{baseUrl}}/rules/
+Content-Type: application/json
+
+{
+    "name": "Super Bulk Discount",
+    "type": "BULK",
+    "priority": 10,
+    "parameters": {
+        "min_quantity": 5,
+        "discount_percentage": 0.2
+    },
+    "is_active": true
+}
+
+
+### --- CART & ORDERS ---
+
+### 10. Add to Cart (Reserve Inventory)
+# @name addToCart
+POST {{baseUrl}}/cart/add
+Content-Type: application/json
+
+{
+    "variant_id": 1,
+    "quantity": 2,
+    "cart_id": "test_cart_session"
+}
+
+### 11. Checkout
+POST {{baseUrl}}/cart/checkout
+Content-Type: application/json
+
+{
+    "cart_id": "test_cart_session"
+}
+
+
+### --- ANALYTICS ---
+
+### 12. View Top Selling Products
+GET {{baseUrl}}/inventory/top-selling?limit=5
+
+### 13. Check Low Stock Inventory
+GET {{baseUrl}}/inventory/low-stock?threshold=10
+
+
+### --- PROMOTIONS ---
+
+### 14. Create a Category Promotion
+POST {{baseUrl}}/promotions/
+Content-Type: application/json
+
+{
+    "name": "Mid-Year Sale",
+    "description": "25% off all electronics",
+    "start_date": "2026-02-01T00:00:00",
+    "end_date": "2026-03-31T23:59:59",
+    "discount_percentage": 0.25,
+    "target_category_id": 1,
+    "is_active": true
+}
+
+### --- SYSTEM ---
+
+### 15. Health Check
+GET http://localhost:8000/health
