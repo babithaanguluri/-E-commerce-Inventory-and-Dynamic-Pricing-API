@@ -91,7 +91,7 @@ class PricingEngine:
             import datetime
             now = datetime.datetime.utcnow()
             promotions = db.query(Promotion).filter(
-                Promotion.is_active == 1,
+                Promotion.is_active == True,
                 Promotion.start_date <= now,
                 Promotion.end_date >= now,
                 (Promotion.target_category_id == product_category_id) | (Promotion.target_category_id == None)

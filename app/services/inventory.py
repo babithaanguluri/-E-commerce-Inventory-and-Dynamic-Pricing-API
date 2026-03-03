@@ -66,7 +66,7 @@ class InventoryService:
         db.flush() 
         
         engine = PricingEngine()
-        rules = db.query(PricingRule).filter(PricingRule.is_active == 1).order_by(PricingRule.priority.desc()).all()
+        rules = db.query(PricingRule).filter(PricingRule.is_active == True).order_by(PricingRule.priority.desc()).all()
 
         for res in reservations:
             variant = db.query(ProductVariant).filter(ProductVariant.id == res.variant_id).with_for_update().first()

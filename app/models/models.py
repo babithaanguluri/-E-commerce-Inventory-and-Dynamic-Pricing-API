@@ -87,7 +87,7 @@ class PricingRule(Base):
     type = Column(Enum(PricingRuleType), nullable=False)
     priority = Column(Integer, default=0)
     parameters = Column(JSON, nullable=False) # e.g. {"min_quantity": 10, "discount": 0.1}
-    is_active = Column(Integer, default=1) # 1 for True, 0 for False (using int for simplicity with some SQL dialects)
+    is_active = Column(Boolean, default=True)
 
 class Order(Base):
     __tablename__ = "orders"
@@ -118,6 +118,6 @@ class Promotion(Base):
     end_date = Column(DateTime, nullable=False)
     discount_percentage = Column(Float, nullable=False) # e.g., 0.20 for 20%
     target_category_id = Column(Integer, ForeignKey("categories.id"), nullable=True) # Null means site-wide
-    is_active = Column(Integer, default=1)
+    is_active = Column(Boolean, default=True)
 
     category = relationship("Category")
